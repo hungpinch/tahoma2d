@@ -822,6 +822,10 @@ int main(int argc, char *argv[]) {
     m_userLog->info(msg);
     // pm->enableTabMode(true);
 
+    // Scenes outside any project fall back to the "sandbox" project, which only the GUI
+    // used to create on first launch; make headless renders self-sufficient.
+    TProjectManager::instance()->createSandboxIfNeeded();
+
     auto project = TProjectManager::instance()->loadSceneProject(srcFilePath);
     if (!project) {
       msg = "Couldn't find the project";  //+ project->getName().getName();
