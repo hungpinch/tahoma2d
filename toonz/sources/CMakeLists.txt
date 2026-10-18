@@ -720,11 +720,8 @@ if(BUILD_ENV_APPLE)
 endif()
 
 if(BUILD_ENV_APPLE)
-    add_custom_command(TARGET executable
-        POST_BUILD COMMAND
-        ${CMAKE_INSTALL_NAME_TOOL} -add_rpath ${CMAKE_INSTALL_RPATH}
-        $<TARGET_FILE:executable>
-    )
+    # (A former add_custom_command targeting the non-existent target "executable" was a silent
+    #  no-op before CMake 3.0's CMP0040 and a hard error from CMake 4; removed.)
     # add capability for retina displays
     set_target_properties(Tahoma2D PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/../cmake/BundleInfo.plist.in)
 endif()
