@@ -420,7 +420,8 @@ void Preferences::definePreferenceItems() {
   define(oldCameraUnits, "oldCameraUnits", QMetaType::QString, "inch");
   define(linearUnits, "linearUnits", QMetaType::QString, "pixel");
   define(cameraUnits, "cameraUnits", QMetaType::QString, "pixel");
-  define(CurrentRoomChoice, "CurrentRoomChoice", QMetaType::QString, "Default");
+  // forkedtools suite: default to the pipeline room set (Board / Animate / Rig / Comp / Export)
+  define(CurrentRoomChoice, "CurrentRoomChoice", QMetaType::QString, "Suite");
   define(functionEditorToggle, "functionEditorToggle", QMetaType::Int,
          (int)ToggleBetweenGraphAndSpreadsheet);
   define(moveCurrentFrameByClickCellArea, "moveCurrentFrameByClickCellArea",
