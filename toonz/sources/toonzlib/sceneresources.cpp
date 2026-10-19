@@ -42,10 +42,12 @@ bool changeSavePath(TFilePath &path, TFilePath oldSavePath,
 
 //-----------------------------------------------------------------------------
 
-// From ../../../filename#type.psd to ../../../filename.psd
+// From ../../../filename#type.psd to ../../../filename.psd (also .ora)
 TFilePath restorePsdPath(const TFilePath &fp) {
   QString path = QString::fromStdWString(fp.getWideString());
-  if (fp.getType() != "psd" || !path.contains("#")) return fp;
+  if ((fp.getType() != "psd" && fp.getType() != "ora") ||
+      !path.contains("#"))
+    return fp;
   int from = path.indexOf("#");
   int to   = path.lastIndexOf(".");
   path.remove(from, to - from);
@@ -611,7 +613,7 @@ TFilePath ResourceImporter::codePath(const TFilePath &oldPath,
 //-----------------------------------------------------------------------------
 
 std::string ResourceImporter::extractPsdSuffix(TFilePath &path) {
-  if (path.getType() != "psd") return "";
+  if (path.getType() != "psd" && path.getType() != "ora") return "";
   std::string name = path.getName();
   int i            = name.find("#");
   if (i == std::string::npos) return "";

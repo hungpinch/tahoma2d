@@ -89,9 +89,9 @@ bool containsOnlyOneRasterLevel(int r0, int c0, int r1, int c1) {
   }
   if (!xl) return false;
   if (xl->getType() == OVL_XSHLEVEL &&
-      (xl->getPath().getType() == "psd" || xl->getPath().getType() == "gif" ||
-       xl->getPath().getType() == "mp4" || xl->getPath().getType() == "webm" ||
-       xl->getPath().getType() == "mov"))
+      (xl->getPath().getType() == "psd" || xl->getPath().getType() == "ora" ||
+       xl->getPath().getType() == "gif" || xl->getPath().getType() == "mp4" ||
+       xl->getPath().getType() == "webm" || xl->getPath().getType() == "mov"))
     return false;
   return (xl->getType() == TZP_XSHLEVEL || xl->getType() == OVL_XSHLEVEL ||
           xl->getType() == TZI_XSHLEVEL);

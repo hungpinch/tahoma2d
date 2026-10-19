@@ -51,6 +51,7 @@
 #include "./tzp/tiio_plt.h"
 #endif
 #include "./psd/tiio_psd.h"
+#include "./ora/tiio_ora.h"
 #include "./avi/tiio_avi.h"
 #include "./pli/tiio_pli.h"
 #include "./tzl/tiio_tzl.h"
@@ -109,6 +110,9 @@ void initImageIo(bool lightVersion) {
   TLevelWriter::define("psd", TLevelWriterPsd::create, false);
   TLevelReader::define("psd", TLevelReaderPsd::create);
   TFileType::declare("psd", TFileType::RASTER_LEVEL);
+
+  TLevelReader::define("ora", TLevelReaderOra::create);
+  TFileType::declare("ora", TFileType::RASTER_LEVEL);
 
   TLevelWriter::define("mesh", TLevelWriterMesh::create, false);
   TLevelReader::define("mesh", TLevelReaderMesh::create);

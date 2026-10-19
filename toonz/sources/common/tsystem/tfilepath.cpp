@@ -806,8 +806,8 @@ bool TFilePath::isFfmpegType() const {
 
 bool TFilePath::isUneditable() const {
   QString type = QString::fromStdString(getType()).toLower();
-  return (type == "psd" || type == "gif" || type == "mp4" || type == "webm" ||
-          type == "mov");
+  return (type == "psd" || type == "ora" || type == "gif" || type == "mp4" ||
+          type == "webm" || type == "mov");
 }
 
 //-----------------------------------------------------------------------------

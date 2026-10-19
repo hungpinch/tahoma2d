@@ -831,7 +831,7 @@ bool TSystem::doesExistFileOrLevel(const TFilePath &fp) {
         return true;
 #endif
     }
-  } else if (fp.getType() == "psd") {
+  } else if (fp.getType() == "psd" || fp.getType() == "ora") {
     QString name(QString::fromStdWString(fp.getWideName()));
     name.append(QString::fromStdString(fp.getDottedType()));
 

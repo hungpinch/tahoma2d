@@ -11,6 +11,7 @@ set(HEADERS
     quantel/tiio_quantel.h
     png/tiio_png.h
     psd/tiio_psd.h
+    ora/tiio_ora.h
     svg/tiio_svg.h
     tzl/tiio_tzl.h
     ../include/tnzimage.h
@@ -41,6 +42,7 @@ set(SOURCES
     quantel/tiio_quantel.cpp
     png/tiio_png.cpp
     psd/tiio_psd.cpp
+    ora/tiio_ora.cpp
     svg/tiio_svg.cpp
     tzl/tiio_tzl.cpp
     ffmpeg/tiio_gif.cpp

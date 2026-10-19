@@ -22,6 +22,7 @@ set(HEADERS ${MOC_HEADERS}
     ../include/ttile.h
     ../common/psdlib/psd.h
     ../common/psdlib/psdutils.h
+    ../common/oralib/ora.h
     ../common/trop/runsmap.h
     ../common/tvectorimage/tvectorimageP.h
     ../common/tvectorimage/tsegmentadjuster.h
@@ -195,6 +196,7 @@ set(SOURCES
     ../common/tvrender/tvectorbrushstyle.cpp
     ../common/psdlib/psd.cpp
     ../common/psdlib/psdutils.cpp
+    ../common/oralib/ora.cpp
     ../common/trop/bbox.cpp
     ../common/trop/brush.cpp
     ../common/trop/quickput.cpp

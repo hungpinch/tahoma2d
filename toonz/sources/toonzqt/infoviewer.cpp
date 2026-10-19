@@ -288,6 +288,8 @@ QString InfoViewerImp::getTypeString() {
     return (m_fids.size() == 1) ? "Single Raster Image" : "Raster Level";
   else if (ext == "psd")
     return "Photoshop Image";
+  else if (ext == "ora")
+    return "OpenRaster Image";
   else
     return "Unmanaged File Type";
 }

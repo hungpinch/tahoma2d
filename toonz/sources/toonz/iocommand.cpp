@@ -16,6 +16,7 @@
 #include "overwritepopup.h"
 #include "cleanupsettingspopup.h"
 #include "psdsettingspopup.h"
+#include "../common/oralib/ora.h"
 #include "filebrowser.h"
 #include "versioncontrol.h"
 #include "cachefxcommand.h"
@@ -2547,6 +2548,81 @@ static int loadPSDResource(IoCmd::LoadResourceArguments &args,
   return count;
 }
 
+//  Load an OpenRaster (.ora) file: one level and column per layer, bottom
+//  layer first. Each layer level is the full canvas with the layer drawn at its
+//  stack.xml offset (see TLevelReaderOra), so the parts line up with no pegbar
+//  edits, and with the layer's opacity baked in. Hidden layers are loaded
+//  with the preview and camstand toggles off.
+//! Returns the number of actually loaded levels
+static int loadOraResource(IoCmd::LoadResourceArguments &args,
+                           const TFilePath &path) {
+  int &row0 = args.row0;
+  int &col0 = args.col0;
+  int &row1 = args.row1;
+  int &col1 = args.col1;
+
+  TApp *app            = TApp::instance();
+  ToonzScene *scene    = app->getCurrentScene()->getScene();
+  TXsheet *xsh         = scene->getXsheet();
+  if (row0 == -1) row0 = app->getCurrentFrame()->getFrameIndex();
+  if (col0 == -1) col0 = app->getCurrentColumn()->getColumnIndex();
+
+  std::unique_ptr<TOraParser> parser;
+  try {
+    parser.reset(new TOraParser(scene->decodeFilePath(path)));
+  } catch (TException &e) {
+    error(QString::fromStdWString(e.getMessage()));
+    return 0;
+  } catch (...) {
+    error("Unhandled exception encountered");
+    return 0;
+  }
+
+  int count = 0;
+  for (int i = parser->getLayerCount() - 1; i >= 0; --i) {
+    const TOraLayer &layer = parser->getLayer(i);
+    TFilePath layerPath    = TOraParser::layerPath(path, i);
+
+    TXshLevel *xl = 0;
+    try {
+      xl = ::loadResource(scene, layerPath, args.castFolder, row0, col0, row1,
+                          col1, true);
+    } catch (TException &e) {
+      error(QString::fromStdWString(e.getMessage()));
+    } catch (...) {
+      error("Unhandled exception encountered");
+    }
+    if (!xl) continue;
+
+    // Name the level (and the column loadLevel just created) after the layer
+    TLevelSet *levelSet = scene->getLevelSet();
+    std::wstring name   = layer.name;
+    for (int k = 2; levelSet->hasLevel(name) && levelSet->getLevel(name) != xl;
+         ++k)
+      name = layer.name + L"_" + std::to_wstring(k);
+    if (xl->getName() != name) {
+      levelSet->renameLevel(xl, name);
+      TStageObjectCmd::rename(TStageObjectId::ColumnId(col0),
+                              QString::fromStdWString(name).toStdString(),
+                              app->getCurrentXsheet());
+    }
+
+    if (!layer.visible) {
+      if (TXshColumn *column = xsh->getColumn(col0)) {
+        column->setPreviewVisible(false);
+        column->setCamstandVisible(false);
+      }
+    }
+
+    // move the current column to the right
+    ++col0;
+    app->getCurrentColumn()->setColumnIndex(col0);
+    args.loadedLevels.push_back(xl);
+    ++count;
+  }
+  return count;
+}
+
 //===========================================================================
 // IoCmd::loadResources(actualPaths[], castFolder, row, col)
 //---------------------------------------------------------------------------
@@ -2778,6 +2854,12 @@ int IoCmd::loadResources(LoadResourceArguments &args, bool updateRecentFile,
       if (ret == 0) continue;
 
       loadedCount += loadPSDResource(args, updateRecentFile, popup);
+
+      if (updateRecentFile)
+        RecentFiles::instance()->addFilePath(
+            toQString(scene->decodeFilePath(path)), RecentFiles::Level);
+    } else if (path.getType() == "ora") {
+      loadedCount += loadOraResource(args, path);
 
       if (updateRecentFile)
         RecentFiles::instance()->addFilePath(

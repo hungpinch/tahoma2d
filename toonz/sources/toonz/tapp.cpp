@@ -605,6 +605,7 @@ void TApp::onXshLevelSwitched(TXshLevel *) {
                             simpleLevel->getType() == OVL_XSHLEVEL ||
                             simpleLevel->getType() == TZI_XSHLEVEL);
       if (isRasterLevel && (simpleLevel->getPath().getType() == "psd" ||
+                            simpleLevel->getPath().getType() == "ora" ||
                             simpleLevel->getPath().getType() == "gif" ||
                             simpleLevel->getPath().getType() == "mp4" ||
                             simpleLevel->getPath().getType() == "webm" ||
